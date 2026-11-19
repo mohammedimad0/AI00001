@@ -1,0 +1,17 @@
+{
+  "id": "RB-003",
+  "title": "Disk full because log rotation stopped",
+  "error_type": "disk_full",
+  "service": "*",
+  "symptoms": "Disk /var/log is 98% full and keeps growing until 'No space left on device'. The disk never clears by itself; logrotate last ran days ago and old log files are not deleted.",
+  "root_cause": "logrotate is broken or disabled (bad config, failed cron), so log files grow without limit until the disk fills.",
+  "impact": "When the disk hits 100% services cannot write logs or temp files and may crash or stop accepting requests.",
+  "fix_steps": [
+    "Find the biggest files: du -sh /var/log/* | sort -h | tail.",
+    "Compress or delete old rotated logs (*.1, *.gz) to free space immediately.",
+    "Run logrotate -f /etc/logrotate.conf and check its output for errors.",
+    "Fix the logrotate config or cron/systemd timer so it runs daily."
+  ],
+  "prevention": "Monitor logrotate success, cap log size per service, and ship logs to Loki instead of keeping them locally.",
+  "source": "seed"
+}

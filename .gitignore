@@ -1,0 +1,21 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Generated output (re-created by `python demo.py`)
+output/
+
+# Large / downloaded data
+data/*.mmdb
+chroma_db/
+
+# Frontend
+node_modules/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

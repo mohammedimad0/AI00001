@@ -1,0 +1,17 @@
+{
+  "id": "RB-010",
+  "title": "Memory leak leads to OOM kill",
+  "error_type": "oom_kill",
+  "service": "*",
+  "symptoms": "Out of memory: Killed process 4321 (java) total-vm. Container OOMKilled, exit code 137. Memory usage climbs steadily for hours before each restart.",
+  "root_cause": "The application leaks memory (unbounded cache, growing lists, unclosed resources) until the kernel or Kubernetes kills it.",
+  "impact": "The service restarts repeatedly; in-flight requests fail at each kill.",
+  "fix_steps": [
+    "Confirm with dmesg | grep -i oom or kubectl describe pod (Last State: OOMKilled).",
+    "Take a heap dump before the next kill.",
+    "Raise the memory limit temporarily to buy time.",
+    "Roll back to the last version without the leak if it started after a deploy."
+  ],
+  "prevention": "Set memory limits and alerts at 80%, load-test new releases, and bound all caches.",
+  "source": "seed"
+}

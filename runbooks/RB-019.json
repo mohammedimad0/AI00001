@@ -1,0 +1,16 @@
+{
+  "id": "RB-019",
+  "title": "HTTP 5xx error spike after a deploy",
+  "error_type": "high_error_rate",
+  "service": "*",
+  "symptoms": "HTTP 500 error rate above 5% on api. Internal Server Error responses jump right after a new release. Errors show a new exception stack trace.",
+  "root_cause": "A bug or config error shipped in the latest deployment.",
+  "impact": "Part or all of the users get errors on the affected endpoints.",
+  "fix_steps": [
+    "Compare the start of the errors with the deploy time.",
+    "Roll back to the previous version.",
+    "Open a bug with the stack trace for the developers."
+  ],
+  "prevention": "Use canary releases with automatic rollback on error rate.",
+  "source": "seed"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "RB-008",
+  "title": "Database connection pool exhausted",
+  "error_type": "db_pool_exhausted",
+  "service": "*",
+  "symptoms": "Timeout waiting for a connection from the pool after 30000ms. FATAL: remaining connection slots are reserved / too many clients already. The database itself is up but apps cannot get a connection.",
+  "root_cause": "The app leaks connections or traffic grew past the pool size, so all connections are busy and new requests wait or fail.",
+  "impact": "Requests hang then fail with timeouts, even though the database is healthy.",
+  "fix_steps": [
+    "Check active connections: SELECT count(*) FROM pg_stat_activity.",
+    "Kill long idle-in-transaction sessions.",
+    "Restart the leaking app instances to release connections.",
+    "Raise pool size or add PgBouncer if traffic really grew."
+  ],
+  "prevention": "Use a connection pooler, set idle timeouts, and alert at 80% pool usage.",
+  "source": "seed"
+}

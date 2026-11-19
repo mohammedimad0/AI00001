@@ -1,0 +1,16 @@
+{
+  "id": "RB-012",
+  "title": "DNS resolution failures",
+  "error_type": "dns_failure",
+  "service": "*",
+  "symptoms": "getaddrinfo ENOTFOUND api.internal. Temporary failure in name resolution. Many services suddenly cannot resolve hostnames while IP addresses still work.",
+  "root_cause": "The DNS resolver (CoreDNS, systemd-resolved or upstream DNS) is down, overloaded or misconfigured.",
+  "impact": "Any call by hostname fails: service-to-service traffic, database connections and external APIs.",
+  "fix_steps": [
+    "Test from a host: dig api.internal and nslookup api.internal.",
+    "Check CoreDNS / resolver pods and logs; restart them if unhealthy.",
+    "Check /etc/resolv.conf for recent changes."
+  ],
+  "prevention": "Run multiple resolvers, cache DNS locally, and monitor resolution latency.",
+  "source": "seed"
+}

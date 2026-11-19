@@ -1,0 +1,15 @@
+{
+  "id": "RB-023",
+  "title": "Scheduled batch job failed",
+  "error_type": "job_failed",
+  "service": "*",
+  "symptoms": "CronJob nightly-report failed with exit code 1. Job did not complete within its deadline. Expected output file missing in the morning.",
+  "root_cause": "Bad input data, a dependency down during the run, or the job hit its timeout.",
+  "impact": "Reports or exports are missing or late.",
+  "fix_steps": [
+    "Read the job's logs for the failing step.",
+    "Fix the input or dependency and re-run the job manually."
+  ],
+  "prevention": "Make jobs idempotent with retries and alert on missed runs.",
+  "source": "seed"
+}

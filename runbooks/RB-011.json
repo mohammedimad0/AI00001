@@ -1,0 +1,16 @@
+{
+  "id": "RB-011",
+  "title": "Pod stuck in CrashLoopBackOff",
+  "error_type": "crashloop",
+  "service": "*",
+  "symptoms": "Back-off restarting failed container. Pod status CrashLoopBackOff with restart count rising. Container exits right after start with an error in its last log lines.",
+  "root_cause": "The container crashes on startup: bad config or missing secret, failing migration, or a dependency it cannot reach.",
+  "impact": "The service has fewer or zero healthy replicas; requests may fail.",
+  "fix_steps": [
+    "Read the crash output: kubectl logs <pod> --previous.",
+    "Check recent config, secret and image changes.",
+    "Roll back the deployment: kubectl rollout undo deployment/<name>."
+  ],
+  "prevention": "Use readiness probes, validate config in CI, and use canary deploys.",
+  "source": "seed"
+}

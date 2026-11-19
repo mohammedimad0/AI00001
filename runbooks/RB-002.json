@@ -1,0 +1,15 @@
+{
+  "id": "RB-002",
+  "title": "Occasional failed logins from normal users",
+  "error_type": "auth_failure",
+  "service": "auth",
+  "symptoms": "A few 'Login failed for user ops from 49.36.12.7 port 40211' events spread out over an hour, with no burst. Source IPs are normal local ISP addresses, not a high-risk country. Usually one user mistyping a password.",
+  "root_cause": "Regular users mistyping or forgetting their password. This is normal background noise, not an attack.",
+  "impact": "None for the system. A single user may be briefly unable to log in.",
+  "fix_steps": [
+    "No action needed unless the same user keeps failing.",
+    "If a user is locked out, verify their identity and help them reset the password."
+  ],
+  "prevention": "Offer self-service password reset and SSO so users mistype passwords less often.",
+  "source": "seed"
+}

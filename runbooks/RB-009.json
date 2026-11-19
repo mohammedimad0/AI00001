@@ -1,0 +1,16 @@
+{
+  "id": "RB-009",
+  "title": "Slow requests on a product API",
+  "error_type": "slow_request",
+  "service": "*",
+  "symptoms": "Slow request GET /api/products/1234 took 2500ms, appearing a few times per hour. Some requests take 1-3 seconds while most are fast. No errors, just slow responses.",
+  "root_cause": "Some queries miss an index or a cache, or a cold cache after deploy makes the first requests slow.",
+  "impact": "Minor: some users wait a few seconds. No data loss and no outage.",
+  "fix_steps": [
+    "Find the slowest endpoints in the logs and check their database queries with EXPLAIN.",
+    "Add the missing index or cache the hot query.",
+    "Only escalate if the rate of slow requests grows or the 95th percentile latency breaches the SLO."
+  ],
+  "prevention": "Track p95 latency per endpoint, review slow-query logs weekly, and warm caches after deploys.",
+  "source": "seed"
+}

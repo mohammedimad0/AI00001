@@ -1,0 +1,18 @@
+{
+  "id": "RB-007",
+  "title": "Primary database down, apps get connection refused",
+  "error_type": "db_down",
+  "service": "db-primary",
+  "symptoms": "PostgreSQL on db-primary is not responding. Connection refused to db-primary:5432 from many web servers at once, repeated every few seconds. PostgresDown alert firing together with a flood of application errors.",
+  "root_cause": "The PostgreSQL process on db-primary has stopped (crash, OOM kill, full disk or host failure), so nothing is listening on port 5432.",
+  "impact": "Every service that needs the database fails: payments and checkout are down for all users.",
+  "fix_steps": [
+    "Check the host is up and postgres is running: systemctl status postgresql.",
+    "Read the PostgreSQL log for the crash reason (OOM, disk full, corruption).",
+    "Free disk or memory if that was the cause, then restart postgres.",
+    "If the primary cannot be recovered quickly, promote the replica and point apps at it.",
+    "Confirm apps reconnect and error rate returns to normal."
+  ],
+  "prevention": "Run a hot standby with automatic failover, monitor disk and memory on the DB host, and use connection retries with backoff.",
+  "source": "seed"
+}

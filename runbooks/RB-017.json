@@ -1,0 +1,16 @@
+{
+  "id": "RB-017",
+  "title": "Database disk filled by WAL files",
+  "error_type": "disk_full",
+  "service": "db-primary",
+  "symptoms": "Disk /var/lib/postgresql on db-primary is 95% full. pg_wal directory growing quickly. Replication slot inactive and WAL files not being recycled.",
+  "root_cause": "An inactive replication slot or failing archive_command keeps PostgreSQL from deleting old WAL files.",
+  "impact": "If the disk fills, PostgreSQL stops and the database goes down.",
+  "fix_steps": [
+    "Check slots: SELECT * FROM pg_replication_slots.",
+    "Drop slots that are no longer used, or fix the replica that stopped consuming.",
+    "Fix archive_command if archiving is failing."
+  ],
+  "prevention": "Alert on replication slot lag and pg_wal size.",
+  "source": "seed"
+}

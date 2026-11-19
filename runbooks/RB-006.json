@@ -1,0 +1,17 @@
+{
+  "id": "RB-006",
+  "title": "Sustained high CPU from a runaway process",
+  "error_type": "high_cpu",
+  "service": "*",
+  "symptoms": "CPU usage above 95% for more than 15 minutes and not resolving; the HighCPU alert stays firing. One process is pinned at 100%, request latency climbs and health checks time out.",
+  "root_cause": "A process is stuck in a busy loop, a bad query or regex is looping, or traffic outgrew the host.",
+  "impact": "Slow responses and timeouts on that host; it may be removed from the load balancer.",
+  "fix_steps": [
+    "Identify the process: top -o %CPU or ps aux --sort=-%cpu | head.",
+    "Capture a stack dump or profile before restarting it, for later analysis.",
+    "Restart the service or drain the host from the load balancer.",
+    "Scale out if the cause is real traffic growth."
+  ],
+  "prevention": "Set CPU limits per service, autoscale on CPU, and add timeouts to expensive operations.",
+  "source": "seed"
+}

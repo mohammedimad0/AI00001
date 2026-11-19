@@ -1,0 +1,16 @@
+{
+  "id": "RB-022",
+  "title": "Network packet loss between hosts",
+  "error_type": "network_errors",
+  "service": "*",
+  "symptoms": "Connection reset by peer and read timeouts between services. Interface eth0 shows rising rx_errors and dropped packets.",
+  "root_cause": "A faulty NIC, cable, switch port, or an overloaded network link.",
+  "impact": "Random timeouts and retries across services.",
+  "fix_steps": [
+    "Run mtr between the affected hosts to find where loss happens.",
+    "Check interface counters with ip -s link.",
+    "Move the workload off the bad host or link."
+  ],
+  "prevention": "Monitor interface errors and packet loss.",
+  "source": "seed"
+}

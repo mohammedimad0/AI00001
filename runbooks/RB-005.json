@@ -1,0 +1,16 @@
+{
+  "id": "RB-005",
+  "title": "Short CPU spike that resolves on its own",
+  "error_type": "high_cpu",
+  "service": "*",
+  "symptoms": "CPU usage above 90% on a web server for about a minute, then resolved itself in 60 seconds. A single HighCPU alert that clears quickly, with no errors in the application logs.",
+  "root_cause": "A short-lived job (cron task, cache warm-up, deploy, GC) briefly uses all CPU. The server recovers by itself.",
+  "impact": "Usually none. A few requests may be slightly slower during the spike.",
+  "fix_steps": [
+    "No immediate action needed if it resolved in under 2 minutes.",
+    "Check cron and deploy history around the spike time to find the trigger.",
+    "If it repeats, add a 'for: 5m' clause to the alert rule."
+  ],
+  "prevention": "Schedule heavy jobs off-peak and only alert on sustained CPU, not single samples.",
+  "source": "seed"
+}

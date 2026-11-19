@@ -1,0 +1,16 @@
+{
+  "id": "RB-020",
+  "title": "Host down, scrape target unreachable",
+  "error_type": "node_down",
+  "service": "*",
+  "symptoms": "Target web-05:9100 is down. up == 0 for node-exporter. Host does not respond to ping or SSH.",
+  "root_cause": "The machine crashed, lost power or network, or node-exporter itself stopped.",
+  "impact": "Services on that host are unavailable; load moves to other hosts.",
+  "fix_steps": [
+    "Try SSH and ping; check the cloud console for host status.",
+    "Reboot the host or restart node-exporter.",
+    "Replace the instance if the hardware failed."
+  ],
+  "prevention": "Spread services across hosts and use auto-healing instance groups.",
+  "source": "seed"
+}

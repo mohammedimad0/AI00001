@@ -1,0 +1,16 @@
+{
+  "id": "RB-013",
+  "title": "High latency calling an upstream service",
+  "error_type": "high_latency",
+  "service": "*",
+  "symptoms": "p95 latency above 2s for the checkout service. Upstream request timeout after 5000ms. Latency rises across all endpoints that depend on one downstream API.",
+  "root_cause": "A downstream dependency is slow (overloaded, degraded network or slow third party), and callers wait on it.",
+  "impact": "Users see slow pages; timeouts can cascade into errors and retries.",
+  "fix_steps": [
+    "Use tracing or logs to find which upstream call got slow.",
+    "Check that service's health, CPU and recent deploys.",
+    "Enable a circuit breaker or fallback, and lower timeouts so threads are not tied up."
+  ],
+  "prevention": "Set timeouts and circuit breakers on all outbound calls and alert on per-dependency latency.",
+  "source": "seed"
+}

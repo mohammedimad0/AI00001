@@ -1,0 +1,16 @@
+{
+  "id": "RB-021",
+  "title": "Disk out of inodes",
+  "error_type": "disk_full",
+  "service": "*",
+  "symptoms": "No space left on device, but df -h shows free space. df -i shows 100% inodes used. Millions of tiny files in a temp or session folder.",
+  "root_cause": "An app creates many small files (sessions, cache, mail queue) and never deletes them.",
+  "impact": "No new files can be created, so services fail to write.",
+  "fix_steps": [
+    "Find the folder with most files: find / -xdev -type f | cut -d/ -f2-3 | sort | uniq -c | sort -n.",
+    "Delete old temp or session files.",
+    "Fix the app to clean up its files."
+  ],
+  "prevention": "Alert on inode usage as well as bytes.",
+  "source": "seed"
+}

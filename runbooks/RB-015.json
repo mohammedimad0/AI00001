@@ -1,0 +1,16 @@
+{
+  "id": "RB-015",
+  "title": "Redis cache down",
+  "error_type": "cache_down",
+  "service": "*",
+  "symptoms": "Error connecting to Redis on cache-01:6379. Connection refused. Cache hit rate drops to zero and database load jumps.",
+  "root_cause": "The Redis process crashed or was OOM killed, or its host or network is down.",
+  "impact": "Every request goes to the database, so it is slower and the database may overload.",
+  "fix_steps": [
+    "Check the Redis process and its log; restart it.",
+    "Check maxmemory and the eviction policy if it was OOM killed.",
+    "Watch database load while the cache warms up again."
+  ],
+  "prevention": "Run Redis with a replica and Sentinel, set maxmemory with an eviction policy, and make apps tolerate cache misses.",
+  "source": "seed"
+}

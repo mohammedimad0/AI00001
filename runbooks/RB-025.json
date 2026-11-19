@@ -1,0 +1,16 @@
+{
+  "id": "RB-025",
+  "title": "Database lock timeouts and deadlocks",
+  "error_type": "db_lock_timeout",
+  "service": "*",
+  "symptoms": "ERROR: deadlock detected. Lock wait timeout exceeded; try restarting transaction. Some writes fail while reads still work.",
+  "root_cause": "Two transactions update the same rows in a different order, or one long transaction holds locks.",
+  "impact": "Some writes fail and users must retry.",
+  "fix_steps": [
+    "Find blocking queries in pg_locks and pg_stat_activity.",
+    "Kill the long-running blocking transaction.",
+    "Fix the code to update rows in a consistent order."
+  ],
+  "prevention": "Keep transactions short and add retry on deadlock.",
+  "source": "seed"
+}

@@ -1,0 +1,15 @@
+{
+  "id": "RB-016",
+  "title": "Service account password expired",
+  "error_type": "auth_failure",
+  "service": "*",
+  "symptoms": "Authentication failed for user svc_reports. Password authentication failed for user svc_backup. A batch job fails at the same time every run with the same service account.",
+  "root_cause": "A service account password was rotated or expired, but the job still uses the old one.",
+  "impact": "Scheduled jobs such as reports or backups stop working.",
+  "fix_steps": [
+    "Confirm the account in the identity system and when its password changed.",
+    "Update the secret in the vault or config and restart the job."
+  ],
+  "prevention": "Use non-expiring keys or automatic secret rotation that also updates consumers.",
+  "source": "seed"
+}

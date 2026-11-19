@@ -1,0 +1,16 @@
+{
+  "id": "RB-024",
+  "title": "Third-party API rate limit exceeded",
+  "error_type": "rate_limited",
+  "service": "*",
+  "symptoms": "HTTP 429 Too Many Requests from the payment provider. Rate limit exceeded, retry after 60 seconds. Calls to one external API fail in bursts.",
+  "root_cause": "Our calls exceed the provider's quota, often because of a retry storm or a traffic spike.",
+  "impact": "Features that depend on that API fail or slow down.",
+  "fix_steps": [
+    "Check our outbound call rate to the provider.",
+    "Add backoff with jitter to retries.",
+    "Ask the provider for a higher limit if the traffic is real."
+  ],
+  "prevention": "Client-side rate limiting and caching of provider responses.",
+  "source": "seed"
+}

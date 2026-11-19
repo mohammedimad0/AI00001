@@ -1,0 +1,16 @@
+{
+  "id": "RB-018",
+  "title": "Database replication lag",
+  "error_type": "db_replication_lag",
+  "service": "*",
+  "symptoms": "Replica db-replica-01 is 300 seconds behind primary. Reads from the replica return stale data.",
+  "root_cause": "The replica cannot keep up: heavy writes, a long query on the replica, or a slow network.",
+  "impact": "Users may see old data; failover to this replica would lose recent writes.",
+  "fix_steps": [
+    "Check lag: SELECT now() - pg_last_xact_replay_timestamp().",
+    "Cancel long queries on the replica.",
+    "Check network and disk IO between primary and replica."
+  ],
+  "prevention": "Alert on lag and keep replica hardware equal to the primary.",
+  "source": "seed"
+}

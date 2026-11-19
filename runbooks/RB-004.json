@@ -1,0 +1,17 @@
+{
+  "id": "RB-004",
+  "title": "Disk almost full alert flapping on a log server",
+  "error_type": "disk_full",
+  "service": "*",
+  "symptoms": "Disk /var/log on logs-01 is 95% full, resolves a few minutes later, then fires again. Seen 6 or more times over the last hour: the DiskAlmostFull alert keeps flapping between firing and resolved. Usage goes up and down like a saw-tooth instead of growing steadily.",
+  "root_cause": "Logs grow quickly between cleanup runs, so usage repeatedly crosses the alert threshold and drops back. The disk is too small for the log volume.",
+  "impact": "Alert fatigue: the same alert pages again and again. A real disk-full can hide among the flaps. Risk of hitting 100% if cleanup is late once.",
+  "fix_steps": [
+    "Check the cleanup/logrotate schedule and make it run more often or delete more aggressively.",
+    "Find which service writes the most logs and lower its log level if it is too verbose.",
+    "Add a 'for: 10m' clause to the alert rule so short spikes do not fire.",
+    "Grow the volume if the real log volume needs more space."
+  ],
+  "prevention": "Size disks for peak log volume, use hysteresis or 'for' durations on alerts, and centralize logs.",
+  "source": "seed"
+}

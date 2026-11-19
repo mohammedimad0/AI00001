@@ -1,0 +1,17 @@
+{
+  "id": "RB-001",
+  "title": "Brute-force login attack from a single IP range",
+  "error_type": "auth_failure",
+  "service": "auth",
+  "symptoms": "Burst of 'Login failed for user admin from 175.45.176.23 port 51234': hundreds of events within 5 minutes. Source IPs geolocate to a high-risk country. Many different usernames are tried, like root, admin, test and deploy.",
+  "root_cause": "An automated attacker is guessing passwords against the login endpoint, cycling through common usernames from a small block of IP addresses.",
+  "impact": "Risk of account takeover if any password is weak. Extra load on the auth service; real users may be locked out by lockout rules.",
+  "fix_steps": [
+    "Block the offending IP range at the firewall or WAF (e.g. 175.45.176.0/22).",
+    "Enable or tighten fail2ban / rate limiting on the login endpoint.",
+    "Check auth logs for any SUCCESSFUL login from the same range and force a password reset for those accounts.",
+    "Disable or rename default accounts such as admin, root and test."
+  ],
+  "prevention": "Enforce MFA, rate-limit logins per IP and per user, geo-block countries you never serve, and alert on login bursts.",
+  "source": "seed"
+}

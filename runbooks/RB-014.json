@@ -1,0 +1,16 @@
+{
+  "id": "RB-014",
+  "title": "Message queue backlog growing",
+  "error_type": "queue_backlog",
+  "service": "*",
+  "symptoms": "Queue orders has 50000 messages ready and growing. Consumer lag increasing on topic events. Messages are produced faster than they are consumed.",
+  "root_cause": "Consumers are down, stuck on a poison message, or too few for the current traffic.",
+  "impact": "Delayed processing: orders, emails or events arrive late. The broker may run out of disk.",
+  "fix_steps": [
+    "Check that consumer processes are running and connected.",
+    "Look for a message that keeps failing and move it to a dead-letter queue.",
+    "Scale up the number of consumers."
+  ],
+  "prevention": "Alert on consumer lag, use dead-letter queues, and autoscale consumers on queue depth.",
+  "source": "seed"
+}
