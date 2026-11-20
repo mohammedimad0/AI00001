@@ -1,0 +1,80 @@
+# Real monitoring stack for Pager Intelligence (step 6).
+# Start:  docker compose -f infra/docker-compose.yml up -d --build
+# Stop:   docker compose -f infra/docker-compose.yml down
+name: pager-intel
+
+services:
+  # The app we break on purpose. Logs -> shared volume (Promtail reads it), metrics -> Prometheus.
+  victim:
+    build: ./victim
+    ports: ["8080:8080"]                       # chaos endpoints: http://localhost:8080/chaos/...
+    environment:
+      DB_HOST: db-primary
+    volumes:
+      - victim-logs:/var/log/victim
+    tmpfs:
+      - /data:size=64m                         # a small "disk" that /chaos/disk can fill
+    depends_on: [db-primary]
+    restart: unless-stopped
+
+  # The database the victim depends on. Named db-primary like in the fake scenario.
+  db-primary:
+    image: postgres:16.9-alpine
+    environment:
+      POSTGRES_DB: shop
+      POSTGRES_USER: shop
+      POSTGRES_PASSWORD: shop
+    restart: unless-stopped
+
+  # Turns "is Postgres answering?" into a metric (pg_up) Prometheus can scrape.
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.17.1
+    environment:
+      DATA_SOURCE_NAME: "postgresql://shop:shop@db-primary:5432/shop?sslmode=disable"
+    restart: unless-stopped
+
+  # Machine metrics (CPU, memory, disk) of the Docker VM.
+  node-exporter:
+    image: prom/node-exporter:v1.9.1
+    restart: unless-stopped
+
+  # Scrapes metrics every 5 s and evaluates the alert rules.
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    ports: ["9090:9090"]                       # http://localhost:9090/alerts
+    volumes:
+      - ./prometheus:/etc/prometheus:ro
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.retention.time=2d
+    restart: unless-stopped
+
+  # Groups firing alerts and POSTs them to our backend webhook.
+  alertmanager:
+    image: prom/alertmanager:v0.28.1
+    ports: ["9093:9093"]
+    volumes:
+      - ./alertmanager:/etc/alertmanager:ro
+    command: [--config.file=/etc/alertmanager/alertmanager.yml]
+    extra_hosts: ["host.docker.internal:host-gateway"]   # reach the backend running on Windows
+    restart: unless-stopped
+
+  # Stores log lines; our backend polls it with LogQL.
+  loki:
+    image: grafana/loki:3.5.0
+    ports: ["3100:3100"]                       # http://localhost:3100/ready
+    command: [-config.file=/etc/loki/local-config.yaml]
+    restart: unless-stopped
+
+  # Tails the victim's log file and ships each line to Loki with labels job + host.
+  promtail:
+    image: grafana/promtail:3.5.0
+    volumes:
+      - victim-logs:/var/log/victim:ro
+      - ./promtail:/etc/promtail:ro
+    command: [-config.file=/etc/promtail/promtail.yml]
+    depends_on: [loki]
+    restart: unless-stopped
+
+volumes:
+  victim-logs:

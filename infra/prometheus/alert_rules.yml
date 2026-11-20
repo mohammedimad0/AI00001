@@ -1,0 +1,36 @@
+groups:
+  - name: pager-intelligence
+    rules:
+      # The victim process uses more than 80% of a CPU core
+      - alert: HighCPU
+        expr: rate(process_cpu_seconds_total{job="victim"}[30s]) > 0.8
+        for: 15s
+        labels: {severity: warning}
+        annotations:
+          summary: 'CPU usage above 90% on {{ $labels.instance | reReplaceAll ":.*" "" }}'
+
+      # The victim's small /data volume is over 90% full
+      - alert: DiskAlmostFull
+        expr: victim_disk_used_ratio > 0.9
+        for: 10s
+        labels: {severity: warning}
+        annotations:
+          summary: 'Disk /data on {{ $labels.instance | reReplaceAll ":.*" "" }} is {{ $value | humanizePercentage }} full'
+
+      # Postgres not answering (exporter reports pg_up 0) or the exporter itself is gone
+      - alert: TargetDown
+        expr: pg_up{job="postgres"} == 0 or up{job="postgres"} == 0
+        for: 15s
+        labels: {severity: critical}
+        annotations:
+          summary: 'PostgreSQL on {{ $labels.instance | reReplaceAll ":.*" "" }} is not responding'
+
+      # More than 20% of the victim's requests fail with a 5xx
+      - alert: HighErrorRate
+        expr: |
+          sum by (instance) (rate(victim_http_requests_total{status=~"5.."}[1m]))
+            / sum by (instance) (rate(victim_http_requests_total[1m])) > 0.2
+        for: 15s
+        labels: {severity: critical}
+        annotations:
+          summary: 'HTTP 5xx error rate above 20% on {{ $labels.instance | reReplaceAll ":.*" "" }}'

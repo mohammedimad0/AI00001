@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+/* Dark ops-console tokens. Components use these by ROLE (bg-surface, text-ink-2, ...). */
+@theme {
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+
+  --color-page: #0d0d0d;        /* page background */
+  --color-surface: #1a1a19;     /* panels, cards, chart surface */
+  --color-raised: #232321;      /* hover / selected card */
+  --color-line: #2c2c2a;        /* hairlines, gridlines */
+  --color-axis: #383835;        /* chart baseline */
+  --color-ink: #f0efec;         /* primary text */
+  --color-ink-2: #c3c2b7;       /* secondary text */
+  --color-muted: #898781;       /* labels, axis ticks */
+
+  /* severity bands (status colors: always shown together with the band name) */
+  --color-critical: #d03b3b;
+  --color-high: #ec835a;
+  --color-medium: #fab219;
+  --color-low: #6b6a65;
+
+  --color-good: #0ca30c;        /* known fix, ok health, score going down */
+  --color-ai: #9085e9;          /* AI-generated */
+  --color-up: #e66767;          /* score going up (waterfall) */
+  --color-series-1: #3987e5;    /* chart: raw events */
+  --color-series-2: #d95926;    /* chart: incidents created */
+}
+
+html, body, #root { height: 100%; }
+body { background: var(--color-page); color: var(--color-ink); }
+
+/* thin dark scrollbars for the panels */
+* { scrollbar-width: thin; scrollbar-color: var(--color-axis) transparent; }
+
+@keyframes pulse-dot { 0%, 100% { opacity: 1 } 50% { opacity: .3 } }
+.pulse-dot { animation: pulse-dot 1.2s ease-in-out infinite; }

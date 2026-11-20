@@ -13,11 +13,16 @@ ALERT_TYPES = {
     "PostgresDown": "db_down",
     "DiskAlmostFull": "disk_full",
     "HighCPU": "high_cpu",
+    "HighErrorRate": "high_error_rate",
+    "TargetDown": "node_down",          # ... or db_down when the target is a database (see below)
 }
+DATABASE_JOBS = {"postgres", "mysql", "redis"}
 
 # Log text patterns -> error_type (first match wins)
 LOG_RULES = [
     (re.compile(r"login failed|authentication failed|invalid password", re.I), "auth_failure"),
+    # real OpenSSH wording (Loghub dataset): failed passwords, unknown users, PAM failures, break-in warnings
+    (re.compile(r"failed password|invalid user|authentication failure|possible break-in attempt", re.I), "auth_failure"),
     (re.compile(r"connection refused to ([\w.-]+)", re.I), "db_down"),
     (re.compile(r"no space left|disk .* full", re.I), "disk_full"),
     (re.compile(r"slow request", re.I), "slow_request"),
@@ -41,6 +46,8 @@ def from_alertmanager(payload: dict) -> list[Event]:
         host = labels.get("instance", "unknown").split(":")[0]
         name = labels.get("alertname", "")
         error_type = ALERT_TYPES.get(name, "unknown")
+        if name == "TargetDown" and labels.get("job") in DATABASE_JOBS:
+            error_type = "db_down"            # a database target is down = the database is down
         message = a.get("annotations", {}).get("summary", name)
         ev = Event(
             timestamp=_parse_time(a["startsAt"]),

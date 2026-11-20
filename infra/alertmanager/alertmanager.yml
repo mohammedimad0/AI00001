@@ -1,0 +1,12 @@
+route:
+  receiver: pager-intelligence
+  group_by: [alertname, instance]
+  group_wait: 10s           # wait 10 s to batch alerts that fire together
+  group_interval: 30s
+  repeat_interval: 1h
+
+receivers:
+  - name: pager-intelligence
+    webhook_configs:
+      - url: http://host.docker.internal:8000/webhook/alertmanager
+        send_resolved: true   # also tell us when an alert clears (CPU blip -> score goes down)

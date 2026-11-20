@@ -1,0 +1,17 @@
+{
+  "model": "qwen2.5:3b",
+  "root_cause": "TLS certificate on api-gateway has expired",
+  "impact": "All affected hosts (batch-01, web-01, web-04) experience SSL handshake failures, leading to service unavailability for users.",
+  "severity_comment": "The score and band (high) seem appropriate given the high number of affected hosts and the severity of the issue.",
+  "fix_steps": [
+    "Check the TLS certificate on api-gateway and renew it.",
+    "Restart the api-gateway service to apply the new certificate.",
+    "Verify the certificate is correctly installed and accessible.",
+    "Monitor the api-gateway service for any further issues.",
+    "Notify the relevant teams about the certificate renewal and the affected hosts.",
+    "Schedule a maintenance window to perform the certificate renewal if needed."
+  ],
+  "prevention": "Implement certificate rotation and auto-renewal policies to avoid such issues in the future.",
+  "confidence": 0.9,
+  "note": "Real answer from qwen2.5:3b for the demo TLS incident, saved 2026-11-20 as the offline fallback."
+}

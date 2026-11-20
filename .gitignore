@@ -19,3 +19,12 @@ node_modules/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Runbooks learned by `demo.py --learn` (the demo resets them each time)
+runbooks/approved/*.json
+
+# Backend database
+pager.db
+
+# start_all.sh logs
+logs/

@@ -18,10 +18,12 @@ Our system turns a flood of alerts/logs into a few scored incidents, each with a
 
 ## Stack
 - Backend: Python 3.11+, FastAPI, LangGraph, SQLite (SQLModel), ChromaDB, sentence-transformers
-- LLM: Ollama, model `qwen2.5:7b` (fits an 8 GB RTX 5050 GPU). Never require a cloud API key.
+- LLM: Ollama, model `qwen2.5:3b` (fits the 4 GB RTX 3050 laptop GPU; `qwen2.5:7b` only on an 8 GB GPU).
+  Model name lives in `core/config.py` (LLM_MODEL). Never require a cloud API key.
 - Frontend: React + Vite + TypeScript + Tailwind
 - Monitoring: Prometheus, Alertmanager, Loki, Promtail, node-exporter in Docker Compose
-- Dev machine: Windows laptop, 16 GB RAM, RTX 5050 8 GB. Commands must work on Windows (PowerShell) too.
+- Dev machine: Windows laptop, 16 GB RAM, NVIDIA RTX 3050 Laptop GPU with 4 GB VRAM, Python 3.14.
+  Commands must work on Windows (PowerShell) too.
 
 ## Existing code (step 1, already working — do not break it)
 - `core/generator.py` fake Alertmanager + Loki JSON, 6 scenarios

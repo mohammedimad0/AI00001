@@ -26,6 +26,11 @@ def build_query(inc: dict) -> str:
     return ". ".join(parts)
 
 
+def closest(inc: dict, k: int) -> list[dict]:
+    """The k nearest runbooks, even below the threshold (used as hints for the LLM)."""
+    return store.search(build_query(inc), k=k)
+
+
 def resolve(inc: dict) -> dict:
     matches = store.search(build_query(inc))
     best = matches[0] if matches else None
